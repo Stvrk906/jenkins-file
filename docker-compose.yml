@@ -1,0 +1,18 @@
+networks:
+  dmz-net:
+    ipam:
+      config:
+        - subnet: 172.20.1.0/24
+          gateway: 172.20.1.254
+
+services:
+  web-dmz:
+    build: ./docker/web-dmz
+    image: netdevops/web-dmz:1.0
+    container_name: web-dmz
+    networks:
+      dmz-net:
+        ipv4_address: 172.20.1.10
+    ports:
+      - "8080:80"
+    restart: unless-stopped
