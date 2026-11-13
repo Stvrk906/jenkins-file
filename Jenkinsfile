@@ -19,6 +19,15 @@ pipeline {
         sh 'test -f docker-compose.yml'
       }
     }
+
+    stage('Lint') {
+      steps {
+        sh '''
+          docker run --rm --volumes-from jenkins -w "$PWD" python:3.12-slim \
+            sh -c "pip install -q yamllint ansible-lint && yamllint . && ansible-lint ansible/"
+        '''
+      }
+    }
   }
 
   post {
