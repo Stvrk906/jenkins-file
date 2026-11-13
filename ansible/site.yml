@@ -4,3 +4,4 @@
   roles:
     - nftables
     - dnsmasq
+    - nginx_proxy

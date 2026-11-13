@@ -1,0 +1,14 @@
+---
+- name: Copier la configuration dans web-dmz
+  ansible.builtin.command: >-
+    docker cp {{ playbook_dir }}/../docker/web-dmz/default.conf
+    web-dmz:/etc/nginx/conf.d/default.conf
+  changed_when: true
+
+- name: Tester la configuration Nginx
+  ansible.builtin.command: docker exec web-dmz nginx -t
+  changed_when: false
+
+- name: Recharger Nginx
+  ansible.builtin.command: docker exec web-dmz nginx -s reload
+  changed_when: true

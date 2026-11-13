@@ -1,0 +1,10 @@
+---
+- name: Generer la configuration Nginx dans le depot
+  ansible.builtin.template:
+    src: default.conf.j2
+    dest: "{{ playbook_dir }}/../docker/web-dmz/default.conf"
+    mode: "0644"
+  notify:
+    - Copier la configuration dans web-dmz
+    - Tester la configuration Nginx
+    - Recharger Nginx
