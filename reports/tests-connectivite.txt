@@ -1,0 +1,7 @@
+PASS  DNS: web.pme.local -> 172.20.1.10
+PASS  LAN -> web-dmz :80 autorise
+PASS  Reverse proxy /app/
+PASS  SSH :22 filtre par router-fw
+PASS  DMZ -> LAN bloque
+PASS  En-tete X-Frame-Options
+PASS  Version Nginx masquee
