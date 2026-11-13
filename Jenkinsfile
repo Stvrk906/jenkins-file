@@ -28,6 +28,13 @@ pipeline {
         '''
       }
     }
+
+    stage('Build Docker') {
+      steps {
+        sh 'docker compose build'
+        sh 'docker images | grep netdevops'
+      }
+    }
   }
 
   post {
