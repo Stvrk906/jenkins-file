@@ -1,0 +1,18 @@
+name: netdevops-tools
+
+services:
+  jenkins:
+    build: ./docker/jenkins
+    image: netdevops/jenkins:1.0
+    container_name: jenkins
+    group_add:
+      - "119"
+    ports:
+      - "8081:8080"
+    volumes:
+      - jenkins_home:/var/jenkins_home
+      - /var/run/docker.sock:/var/run/docker.sock
+    restart: unless-stopped
+
+volumes:
+  jenkins_home:
