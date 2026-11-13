@@ -1,5 +1,5 @@
-FROM alpine:3.20
-RUN apk add --no-cache dnsmasq
+FROM alpine:3.21
+RUN apk upgrade --no-cache && apk add --no-cache dnsmasq
 COPY dnsmasq.conf /etc/dnsmasq.conf
 EXPOSE 53/udp 53/tcp
 CMD ["dnsmasq", "--no-daemon"]
