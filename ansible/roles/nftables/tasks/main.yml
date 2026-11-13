@@ -4,12 +4,6 @@
     src: nftables.conf.j2
     dest: /tmp/nftables.conf
     mode: "0644"
-  register: nft_rules
-
-- name: Copier les regles dans router-fw
-  ansible.builtin.command: docker cp /tmp/nftables.conf router-fw:/etc/nftables.conf
-  when: nft_rules.changed
-
-- name: Charger les regles dans router-fw
-  ansible.builtin.command: docker exec router-fw nft -f /etc/nftables.conf
-  when: nft_rules.changed
+  notify:
+    - Copier les regles dans router-fw
+    - Charger les regles dans router-fw

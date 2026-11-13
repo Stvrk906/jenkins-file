@@ -1,0 +1,8 @@
+---
+- name: Copier les regles dans router-fw
+  ansible.builtin.command: docker cp /tmp/nftables.conf router-fw:/etc/nftables.conf
+  changed_when: true
+
+- name: Charger les regles dans router-fw
+  ansible.builtin.command: docker exec router-fw nft -f /etc/nftables.conf
+  changed_when: true
