@@ -1,0 +1,7 @@
+no-resolv
+server={{ dns_upstream }}
+domain={{ dns_domain }}
+local=/{{ dns_domain }}/
+address=/web.{{ dns_domain }}/{{ web_dmz_ip }}
+address=/dns.{{ dns_domain }}/{{ dns_lan_ip }}
+log-queries

@@ -1,0 +1,9 @@
+---
+- name: Generer dnsmasq.conf dans le depot
+  ansible.builtin.template:
+    src: dnsmasq.conf.j2
+    dest: "{{ playbook_dir }}/../docker/dns-lan/dnsmasq.conf"
+    mode: "0644"
+  notify:
+    - Copier la configuration dans dns-lan
+    - Redemarrer dns-lan
