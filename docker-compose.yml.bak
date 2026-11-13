@@ -1,0 +1,80 @@
+networks:
+  dmz-net:
+    ipam:
+      config:
+        - subnet: 172.20.1.0/24
+          gateway: 172.20.1.254
+  lan-net:
+    ipam:
+      config:
+        - subnet: 172.20.2.0/24
+          gateway: 172.20.2.254
+  mgmt-net:
+    ipam:
+      config:
+        - subnet: 172.20.3.0/24
+          gateway: 172.20.3.254
+
+services:
+  web-dmz:
+    build: ./docker/web-dmz
+    image: netdevops/web-dmz:1.0
+    container_name: web-dmz
+    networks:
+      dmz-net:
+        ipv4_address: 172.20.1.10
+    ports:
+      - "8080:80"
+    restart: unless-stopped
+
+  dns-lan:
+    build: ./docker/dns-lan
+    image: netdevops/dns-lan:1.0
+    container_name: dns-lan
+    networks:
+      lan-net:
+        ipv4_address: 172.20.2.10
+    restart: unless-stopped
+
+  monitoring:
+    image: prom/prometheus:v2.54.1
+    container_name: monitoring
+    volumes:
+      - ./docker/monitoring/prometheus.yml:/etc/prometheus/prometheus.yml:ro
+    networks:
+      mgmt-net:
+        ipv4_address: 172.20.3.10
+    ports:
+      - "9090:9090"
+    restart: unless-stopped
+
+  node-exporter:
+    image: prom/node-exporter:v1.8.2
+    container_name: node-exporter
+    command:
+      - "--path.rootfs=/host"
+    pid: host
+    volumes:
+      - /:/host:ro,rslave
+    networks:
+      - mgmt-net
+    restart: unless-stopped
+
+  grafana:
+    image: grafana/grafana:11.2.0
+    container_name: grafana
+    environment:
+      GF_SECURITY_ADMIN_PASSWORD: ${GF_ADMIN_PASSWORD}
+    volumes:
+      - grafana-data:/var/lib/grafana
+      - ./docker/grafana/provisioning:/etc/grafana/provisioning:ro
+      - ./docker/grafana/dashboards:/var/lib/grafana/dashboards:ro
+    networks:
+      mgmt-net:
+        ipv4_address: 172.20.3.20
+    ports:
+      - "3000:3000"
+    restart: unless-stopped
+
+volumes:
+  grafana-data:
