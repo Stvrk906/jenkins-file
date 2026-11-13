@@ -3,3 +3,5 @@
 *.retry
 *.bak*
 *.orig
+*.bak*
+*.orig
