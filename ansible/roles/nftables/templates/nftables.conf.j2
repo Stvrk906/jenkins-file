@@ -1,0 +1,20 @@
+flush ruleset
+table inet filter {
+  chain input {
+    type filter hook input priority 0; policy drop;
+    ct state established,related accept
+    iif lo accept
+    ip protocol icmp accept
+    ip saddr {{ mgmt_net }} accept
+  }
+  chain forward {
+    type filter hook forward priority 0; policy drop;
+    ct state established,related accept
+    ip saddr {{ lan_net }} ip daddr {{ web_dmz_ip }} tcp dport { 80, 443 } accept
+    ip saddr {{ mgmt_net }} accept
+    ip saddr {{ dmz_net }} ip daddr {{ lan_net }} drop
+  }
+  chain output {
+    type filter hook output priority 0; policy accept;
+  }
+}
