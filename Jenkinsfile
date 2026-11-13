@@ -35,6 +35,18 @@ pipeline {
         sh 'docker images | grep netdevops'
       }
     }
+
+    stage('Trivy Scan') {
+      steps {
+        sh '''
+          for img in web-dmz dns-lan router-fw; do
+            docker run --rm -v /var/run/docker.sock:/var/run/docker.sock -v trivy-cache:/root/.cache \
+              aquasec/trivy:0.57.1 image --no-progress --scanners vuln \
+              --severity HIGH,CRITICAL --ignore-unfixed --exit-code 1 netdevops/$img:1.0
+          done
+        '''
+      }
+    }
   }
 
   post {
